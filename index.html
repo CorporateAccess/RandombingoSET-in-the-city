@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SET in the City 2026 - JUMP+ BINGO V.2</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:Arial,sans-serif;
+    overflow:hidden;
+    height:100vh;
+    color:#fff;
+    background:
+        radial-gradient(circle at 80% 20%, rgba(0,150,255,.45), transparent 35%),
+        linear-gradient(135deg,#06224a 0%,#0b4f8f 45%,#061d3d 100%);
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+        linear-gradient(120deg,transparent 0%,transparent 45%,rgba(255,255,255,.08) 45%,rgba(255,255,255,.08) 58%,transparent 58%),
+        linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px);
+    background-size:100% 100%,100% 70px;
+    opacity:.6;
+    pointer-events:none;
+}
+
+.header{
+    height:118px;
+    padding:18px 34px;
+    display:flex;
+    align-items:center;
+    position:relative;
+    z-index:5;
+}
+
+.set-line{font-size:34px;font-weight:900;color:#fff;}
+.city-line{font-size:54px;font-weight:900;color:#fff;}
+.year{color:#ff9f00;}
+
+.main{
+    display:flex;
+    height:calc(100vh - 118px);
+    padding:0 34px 34px;
+    gap:28px;
+    position:relative;
+    z-index:2;
+}
+
+.sidebar{
+    width:330px;
+    border-radius:28px;
+    overflow:hidden;
+    background:rgba(255,255,255,.12);
+    border:3px solid rgba(255,255,255,.35);
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+    backdrop-filter:blur(6px);
+    display:flex;
+    flex-direction:column;
+}
+
+.out-header{
+    background:#ff9f00;
+    color:#06224a;
+    padding:22px;
+    text-align:center;
+    font-size:48px;
+    font-weight:900;
+}
+
+.out-list{
+    flex:1;
+    overflow-y:auto;
+    background:rgba(255,255,255,.92);
+}
+
+.out-item{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:14px 20px;
+    border-bottom:1px solid rgba(0,0,0,.08);
+    font-size:28px;
+    font-weight:900;
+    color:#06224a;
+}
+
+.out-number{
+    color:#ff9f00;
+    min-width:52px;
+}
+
+.center{
+    flex:1;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    border-radius:30px;
+}
+
+.track{
+    position:absolute;
+    inset:auto 0 0 0;
+    height:42%;
+    background:linear-gradient(rgba(255,255,255,.15) 2px,transparent 2px);
+    background-size:100% 54px;
+    opacity:.6;
+}
+
+.bars{
+    position:absolute;
+    bottom:80px;
+    right:70px;
+    display:flex;
+    align-items:flex-end;
+    gap:18px;
+    opacity:.38;
+}
+
+.bar{width:50px;background:rgba(255,255,255,.7);}
+.bar:nth-child(1){height:90px;}
+.bar:nth-child(2){height:140px;}
+.bar:nth-child(3){height:115px;}
+.bar:nth-child(4){height:180px;}
+.bar:nth-child(5){height:260px;}
+.bar:nth-child(6){height:320px;}
+
+.arrow-line{
+    position:absolute;
+    left:6%;
+    bottom:18%;
+    width:60%;
+    height:6px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.55));
+    transform:rotate(-18deg);
+    border-radius:999px;
+}
+
+.board{
+    width:860px;
+    text-align:center;
+    position:relative;
+    z-index:5;
+}
+
+.theme-head{
+    font-size:58px;
+    font-weight:900;
+    line-height:1.05;
+    margin-bottom:22px;
+    text-shadow:0 8px 24px rgba(0,0,0,.28);
+}
+
+.theme-head span{color:#ff9f00;}
+
+.board-top{
+    display:inline-block;
+    background:#ff9f00;
+    color:#06224a;
+    padding:14px 44px;
+    border-radius:999px;
+    font-size:30px;
+    font-weight:900;
+    margin-bottom:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.word-box{
+    min-height:380px;
+    border-radius:36px;
+    background:rgba(255,255,255,.94);
+    border:6px solid #ff9f00;
+    box-shadow:0 24px 60px rgba(0,0,0,.35), inset 0 0 40px rgba(255,255,255,.9);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    padding:24px;
+}
+
+.word-box::before{
+    content:"";
+    position:absolute;
+    inset:-40%;
+    background:radial-gradient(circle,rgba(255,159,0,.22),transparent 55%);
+    animation:shine 5s linear infinite;
+}
+
+@keyframes shine{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+.stock-info{
+    position:relative;
+    z-index:3;
+    text-align:center;
+}
+
+.word{
+    color:#06224a;
+    font-size:145px;
+    font-weight:900;
+    text-shadow:0 4px 0 #ff9f00,0 12px 28px rgba(0,0,0,.22);
+}
+
+.company-name{
+    color:#06224a;
+    font-size:34px;
+    font-weight:900;
+    margin-top:10px;
+    line-height:1.3;
+}
+
+.company-desc{
+    color:#444;
+    font-size:25px;
+    font-weight:700;
+    line-height:1.5;
+    margin-top:14px;
+    max-width:760px;
+}
+
+.pop{animation:pop .12s linear;}
+
+@keyframes pop{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.13);}
+    100%{transform:scale(1);}
+}
+
+.button-wrap{
+    margin-top:28px;
+    display:flex;
+    gap:22px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    padding:20px 86px;
+    border-radius:999px;
+    background:#ff9f00;
+    color:#06224a;
+    font-size:48px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 10px 0 #c77700,0 18px 35px rgba(0,0,0,.28);
+    transition:.15s;
+}
+
+button:hover{transform:translateY(-4px);}
+button:active{transform:translateY(2px);}
+button:disabled{opacity:.6;cursor:not-allowed;}
+
+.reset-btn{
+    background:#ffffff !important;
+    color:#0b2c5f !important;
+    box-shadow:0 10px 0 #d0d0d0,0 18px 35px rgba(0,0,0,.18) !important;
+}
+
+canvas{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:999;
+}
+
+@media(max-width:900px){
+    body{overflow:auto;}
+    .main{flex-direction:column;height:auto;}
+    .sidebar{width:100%;height:260px;}
+    .word{font-size:82px;}
+    .theme-head{font-size:38px;}
+    .company-name{font-size:24px;}
+    .company-desc{font-size:20px;}
+    button{font-size:30px;padding:16px 44px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <div class="event-title">
+        <div class="set-line">SET in the city <span class="year">2026</span></div>
+        <div class="city-line">JUMP+ BINGO</div>
+    </div>
+</div>
+
+<div class="main">
+
+    <div class="sidebar">
+        <div class="out-header">OUT LIST</div>
+        <div class="out-list" id="history"></div>
+    </div>
+
+    <div class="center">
+
+        <div class="track"></div>
+
+        <div class="bars">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+        <div class="arrow-line"></div>
+
+        <div class="board">
+
+            <div class="theme-head">
+                เทรนทุกก้าว ฟิตทุกสกิล<br>
+                <span>เพื่อทุกเป้าหมายการลงทุน</span>
+            </div>
+
+            <div class="board-top">
+                RANDOM STOCK PICKER
+            </div>
+
+            <div class="word-box">
+                <div class="stock-info">
+                    <div class="word" id="current">-</div>
+                    <div class="company-name" id="companyName"></div>
+                    <div class="company-desc" id="companyDesc"></div>
+                </div>
+            </div>
+
+            <div class="button-wrap">
+                <button onclick="draw()" id="btn">🎲 สุ่มคำ</button>
+                <button onclick="resetGame()" class="reset-btn">🔄 เริ่มใหม่</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+const stocks = [
+
+{code:"A5",name:"A5",desc:"ข้อมูลธุรกิจ"},
+{code:"AAV",name:"AAV",desc:"ข้อมูลธุรกิจ"},
+{code:"ABM",name:"ABM",desc:"ข้อมูลธุรกิจ"},
+{code:"ADVICE",name:"ADVICE",desc:"ข้อมูลธุรกิจ"},
+{code:"AGE",name:"AGE",desc:"ข้อมูลธุรกิจ"},
+{code:"ALLA",name:"ALLA",desc:"ข้อมูลธุรกิจ"},
+{code:"ALT",name:"ALT",desc:"ข้อมูลธุรกิจ"},
+{code:"ARIP",name:"ARIP",desc:"ข้อมูลธุรกิจ"},
+{code:"ASTR",name:"ASTR",desc:"ข้อมูลธุรกิจ"},
+{code:"ASW",name:"ASW",desc:"ข้อมูลธุรกิจ"},
+{code:"ATLAS",name:"ATLAS",desc:"ข้อมูลธุรกิจ"},
+{code:"ATP30",name:"ATP30",desc:"ข้อมูลธุรกิจ"},
+{code:"AURA",name:"AURA",desc:"ข้อมูลธุรกิจ"},
+{code:"BAFS",name:"BAFS",desc:"ข้อมูลธุรกิจ"},
+{code:"BBIK",name:"BBIK",desc:"ข้อมูลธุรกิจ"},
+{code:"BCH",name:"BCH",desc:"ข้อมูลธุรกิจ"},
+{code:"BCPG",name:"BCPG",desc:"ข้อมูลธุรกิจ"},
+{code:"BE8",name:"BE8",desc:"ข้อมูลธุรกิจ"},
+{code:"BEYOND",name:"BEYOND",desc:"ข้อมูลธุรกิจ"},
+{code:"BIS",name:"BIS",desc:"ข้อมูลธุรกิจ"},
+{code:"BLC",name:"BLC",desc:"ข้อมูลธุรกิจ"},
+{code:"BPS",name:"BPS",desc:"ข้อมูลธุรกิจ"},
+{code:"BRI",name:"BRI",desc:"ข้อมูลธุรกิจ"},
+{code:"CEYE",name:"CEYE",desc:"ข้อมูลธุรกิจ"},
+{code:"CFARM",name:"CFARM",desc:"ข้อมูลธุรกิจ"},
+{code:"CHAO",name:"CHAO",desc:"ข้อมูลธุรกิจ"},
+{code:"CHAYO",name:"CHAYO",desc:"ข้อมูลธุรกิจ"},
+{code:"CHOW",name:"CHOW",desc:"ข้อมูลธุรกิจ"},
+{code:"CIVIL",name:"CIVIL",desc:"ข้อมูลธุรกิจ"},
+{code:"CMAN",name:"CMAN",desc:"ข้อมูลธุรกิจ"},
+{code:"CMC",name:"CMC",desc:"ข้อมูลธุรกิจ"},
+{code:"COCOCO",name:"COCOCO",desc:"ข้อมูลธุรกิจ"},
+{code:"CPANEL",name:"CPANEL",desc:"ข้อมูลธุรกิจ"},
+{code:"CWT",name:"CWT",desc:"ข้อมูลธุรกิจ"},
+{code:"DEMCO",name:"DEMCO",desc:"ข้อมูลธุรกิจ"},
+{code:"EKH",name:"EKH",desc:"ข้อมูลธุรกิจ"},
+{code:"ERW",name:"ERW",desc:"ข้อมูลธุรกิจ"},
+{code:"ETE",name:"ETE",desc:"ข้อมูลธุรกิจ"},
+{code:"FLOYD",name:"FLOYD",desc:"ข้อมูลธุรกิจ"},
+{code:"FM",name:"FM",desc:"ข้อมูลธุรกิจ"},
+{code:"FPI",name:"FPI",desc:"ข้อมูลธุรกิจ"},
+{code:"FSMART",name:"FSMART",desc:"ข้อมูลธุรกิจ"},
+{code:"FTE",name:"FTE",desc:"ข้อมูลธุรกิจ"},
+{code:"GCAP",name:"GCAP",desc:"ข้อมูลธุรกิจ"},
+{code:"HARN",name:"HARN",desc:"ข้อมูลธุรกิจ"},
+{code:"HENG",name:"HENG",desc:"ข้อมูลธุรกิจ"},
+{code:"IIG",name:"IIG",desc:"ข้อมูลธุรกิจ"},
+{code:"INSET",name:"INSET",desc:"ข้อมูลธุรกิจ"},
+{code:"IP",name:"IP",desc:"ข้อมูลธุรกิจ"},
+{code:"ITTHI",name:"ITTHI",desc:"ข้อมูลธุรกิจ"},
+{code:"IVF",name:"IVF",desc:"ข้อมูลธุรกิจ"},
+{code:"JAK",name:"JAK",desc:"ข้อมูลธุรกิจ"},
+{code:"JMART",name:"JMART",desc:"ข้อมูลธุรกิจ"},
+{code:"JMT",name:"JMT",desc:"ข้อมูลธุรกิจ"},
+{code:"JSP",name:"JSP",desc:"ข้อมูลธุรกิจ"},
+{code:"JUBILE",name:"JUBILE",desc:"ข้อมูลธุรกิจ"},
+{code:"KBS",name:"KBS",desc:"ข้อมูลธุรกิจ"},
+{code:"KCG",name:"KCG",desc:"ข้อมูลธุรกิจ"},
+{code:"KJL",name:"KJL",desc:"ข้อมูลธุรกิจ"},
+{code:"KLINIQ",name:"KLINIQ",desc:"ข้อมูลธุรกิจ"},
+{code:"KUMWEL",name:"KUMWEL",desc:"ข้อมูลธุรกิจ"},
+{code:"LEO",name:"LEO",desc:"ข้อมูลธุรกิจ"},
+{code:"LTMH",name:"LTMH",desc:"ข้อมูลธุรกิจ"},
+{code:"MAGURO",name:"MAGURO",desc:"ข้อมูลธุรกิจ"},
+{code:"MASTEC",name:"MASTEC",desc:"ข้อมูลธุรกิจ"},
+{code:"MCA",name:"MCA",desc:"ข้อมูลธุรกิจ"},
+{code:"MEDEZE",name:"MEDEZE",desc:"ข้อมูลธุรกิจ"},
+{code:"MENA",name:"MENA",desc:"ข้อมูลธุรกิจ"},
+{code:"MGC",name:"MGC",desc:"ข้อมูลธุรกิจ"},
+{code:"MGT",name:"MGT",desc:"ข้อมูลธุรกิจ"},
+{code:"MMM",name:"MMM",desc:"ข้อมูลธุรกิจ"},
+{code:"MOONG",name:"MOONG",desc:"ข้อมูลธุรกิจ"},
+{code:"MOSHI",name:"MOSHI",desc:"ข้อมูลธุรกิจ"},
+{code:"MTC",name:"MTC",desc:"ข้อมูลธุรกิจ"},
+{code:"NAM",name:"NAM",desc:"ข้อมูลธุรกิจ"},
+{code:"NAT",name:"NAT",desc:"ข้อมูลธุรกิจ"},
+{code:"NEO",name:"NEO",desc:"ข้อมูลธุรกิจ"},
+{code:"NTF",name:"NTF",desc:"ข้อมูลธุรกิจ"},
+{code:"ORI",name:"ORI",desc:"ข้อมูลธุรกิจ"},
+{code:"ORN",name:"ORN",desc:"ข้อมูลธุรกิจ"},
+{code:"PANEL",name:"PANEL",desc:"ข้อมูลธุรกิจ"},
+{code:"PCE",name:"PCE",desc:"ข้อมูลธุรกิจ"},
+{code:"PDG",name:"PDG",desc:"ข้อมูลธุรกิจ"},
+{code:"PDJ",name:"PDJ",desc:"ข้อมูลธุรกิจ"},
+{code:"PJW",name:"PJW",desc:"ข้อมูลธุรกิจ"},
+{code:"PL",name:"PL",desc:"ข้อมูลธุรกิจ"},
+{code:"PRI",name:"PRI",desc:"ข้อมูลธุรกิจ"},
+{code:"PRTR",name:"PRTR",desc:"ข้อมูลธุรกิจ"},
+{code:"PSP",name:"PSP",desc:"ข้อมูลธุรกิจ"},
+{code:"PTT",name:"PTT",desc:"ข้อมูลธุรกิจ"},
+{code:"PTTEP",name:"PTTEP",desc:"ข้อมูลธุรกิจ"},
+{code:"RJH",name:"RJH",desc:"ข้อมูลธุรกิจ"},
+{code:"RT",name:"RT",desc:"ข้อมูลธุรกิจ"},
+{code:"S",name:"S",desc:"ข้อมูลธุรกิจ"},
+{code:"SAF",name:"SAF",desc:"ข้อมูลธุรกิจ"},
+{code:"SALEE",name:"SALEE",desc:"ข้อมูลธุรกิจ"},
+{code:"SCL",name:"SCL",desc:"ข้อมูลธุรกิจ"},
+{code:"SCN",name:"SCN",desc:"ข้อมูลธุรกิจ"},
+{code:"SE",name:"SE",desc:"ข้อมูลธุรกิจ"},
+{code:"SEI",name:"SEI",desc:"ข้อมูลธุรกิจ"},
+{code:"SHR",name:"SHR",desc:"ข้อมูลธุรกิจ"},
+{code:"SINGER",name:"SINGER",desc:"ข้อมูลธุรกิจ"},
+{code:"SJWD",name:"SJWD",desc:"ข้อมูลธุรกิจ"},
+{code:"SKIN",name:"SKIN",desc:"ข้อมูลธุรกิจ"},
+{code:"SMD100",name:"SMD100",desc:"ข้อมูลธุรกิจ"},
+{code:"SMO",name:"SMO",desc:"ข้อมูลธุรกิจ"},
+{code:"SNNP",name:"SNNP",desc:"ข้อมูลธุรกิจ"},
+{code:"SNPS",name:"SNPS",desc:"ข้อมูลธุรกิจ"},
+{code:"SO",name:"SO",desc:"ข้อมูลธุรกิจ"},
+{code:"SPALI",name:"SPALI",desc:"ข้อมูลธุรกิจ"},
+{code:"SPRC",name:"SPRC",desc:"ข้อมูลธุรกิจ"},
+{code:"STC",name:"STC",desc:"ข้อมูลธุรกิจ"},
+{code:"STECH",name:"STECH",desc:"ข้อมูลธุรกิจ"},
+{code:"SUN",name:"SUN",desc:"ข้อมูลธุรกิจ"},
+{code:"TBN",name:"TBN",desc:"ข้อมูลธุรกิจ"},
+{code:"TEGH",name:"TEGH",desc:"ข้อมูลธุรกิจ"},
+{code:"THAI",name:"THAI",desc:"ข้อมูลธุรกิจ"},
+{code:"THMUI",name:"THMUI",desc:"ข้อมูลธุรกิจ"},
+{code:"TISCO",name:"TISCO",desc:"ข้อมูลธุรกิจ"},
+{code:"TITLE",name:"TITLE",desc:"ข้อมูลธุรกิจ"},
+{code:"TMAN",name:"TMAN",desc:"ข้อมูลธุรกิจ"},
+{code:"TMC",name:"TMC",desc:"ข้อมูลธุรกิจ"},
+{code:"TNP",name:"TNP",desc:"ข้อมูลธุรกิจ"},
+{code:"TNR",name:"TNR",desc:"ข้อมูลธุรกิจ"},
+{code:"TPLAS",name:"TPLAS",desc:"ข้อมูลธุรกิจ"},
+{code:"TQM",name:"TQM",desc:"ข้อมูลธุรกิจ"},
+{code:"TURBO",name:"TURBO",desc:"ข้อมูลธุรกิจ"},
+{code:"TVO",name:"TVO",desc:"ข้อมูลธุรกิจ"},
+{code:"TWPC",name:"TWPC",desc:"ข้อมูลธุรกิจ"},
+{code:"UAC",name:"UAC",desc:"ข้อมูลธุรกิจ"},
+{code:"UBA",name:"UBA",desc:"ข้อมูลธุรกิจ"},
+{code:"UREKA",name:"UREKA",desc:"ข้อมูลธุรกิจ"},
+{code:"VARO",name:"VARO",desc:"ข้อมูลธุรกิจ"},
+{code:"VIH",name:"VIH",desc:"ข้อมูลธุรกิจ"},
+{code:"WARRIX",name:"WARRIX",desc:"ข้อมูลธุรกิจ"},
+{code:"WGE",name:"WGE",desc:"ข้อมูลธุรกิจ"},
+{code:"WICE",name:"WICE",desc:"ข้อมูลธุรกิจ"},
+{code:"WINNER",name:"WINNER",desc:"ข้อมูลธุรกิจ"},
+{code:"WP",name:"WP",desc:"ข้อมูลธุรกิจ"},
+{code:"XO",name:"XO",desc:"ข้อมูลธุรกิจ"},
+{code:"YONG",name:"YONG",desc:"ข้อมูลธุรกิจ"},
+{code:"ZIGA",name:"ZIGA",desc:"ข้อมูลธุรกิจ"}
+
+];
+
+let remaining = [...stocks];
+let used = [];
+
+function draw(){
+
+    if(remaining.length === 0){
+        alert("หมดแล้วทุกบริษัท!");
+        return;
+    }
+
+    const btn = document.getElementById('btn');
+    const display = document.getElementById('current');
+    const companyName = document.getElementById('companyName');
+    const companyDesc = document.getElementById('companyDesc');
+
+    btn.disabled = true;
+    companyName.innerText = "";
+    companyDesc.innerText = "";
+
+    let spinCount = 0;
+
+    const spin = setInterval(()=>{
+
+        const randomStock = remaining[Math.floor(Math.random()*remaining.length)];
+
+        display.innerText = randomStock.code;
+
+        display.classList.remove('pop');
+        void display.offsetWidth;
+        display.classList.add('pop');
+
+        spinCount++;
+
+        if(spinCount > 24){
+
+            clearInterval(spin);
+
+            const index = Math.floor(Math.random()*remaining.length);
+            const picked = remaining.splice(index,1)[0];
+
+            used.push(picked);
+
+            display.innerText = picked.code;
+            companyName.innerText = picked.name;
+            companyDesc.innerText = picked.desc;
+
+            renderHistory();
+            launchConfetti();
+
+            btn.disabled = false;
+        }
+
+    },80);
+}
+
+function resetGame(){
+
+    remaining = [...stocks];
+    used = [];
+
+    document.getElementById('current').innerText = '-';
+    document.getElementById('companyName').innerText = '';
+    document.getElementById('companyDesc').innerText = '';
+    document.getElementById('history').innerHTML = '';
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces = [];
+
+    if(confettiAnimation){
+        cancelAnimationFrame(confettiAnimation);
+        confettiAnimation = null;
+    }
+
+    document.getElementById('btn').disabled = false;
+}
+
+function renderHistory(){
+
+    const history = document.getElementById('history');
+
+    history.innerHTML = used.map((w,i)=>`
+        <div class="out-item">
+            <div class="out-number">${String(i+1).padStart(2,'0')}</div>
+            <div>${w.code}</div>
+        </div>
+    `).join('');
+}
+
+const canvas = document.getElementById('confetti');
+const ctx = canvas.getContext('2d');
+
+function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+resize();
+window.addEventListener('resize',resize);
+
+let pieces = [];
+let confettiAnimation = null;
+
+function launchConfetti(){
+
+    pieces = [];
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(confettiAnimation){
+        cancelAnimationFrame(confettiAnimation);
+        confettiAnimation = null;
+    }
+
+    for(let i=0;i<160;i++){
+
+        const colors = ["#ff9f00","#ffffff","#39a8ff","#0b4f8f"];
+
+        pieces.push({
+            x:canvas.width/2,
+            y:canvas.height/2,
+            vx:(Math.random()-.5)*15,
+            vy:(Math.random()-.8)*15,
+            size:Math.random()*8+4,
+            life:70,
+            color:colors[Math.floor(Math.random()*colors.length)]
+        });
+    }
+
+    animateConfetti();
+}
+
+function animateConfetti(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    pieces.forEach(p=>{
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.28;
+        p.life--;
+
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x,p.y,p.size,p.size);
+    });
+
+    pieces = pieces.filter(p=>p.life>0);
+
+    if(pieces.length > 0){
+        confettiAnimation = requestAnimationFrame(animateConfetti);
+    }else{
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        confettiAnimation = null;
+    }
+}
+</script>
+
+</body>
+</html>
